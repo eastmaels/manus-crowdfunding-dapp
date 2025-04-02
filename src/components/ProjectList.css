@@ -1,0 +1,103 @@
+.project-list {
+  margin: 30px 0;
+}
+
+.project-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+.project-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.description {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.project-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 12px;
+  color: #888;
+}
+
+.value {
+  font-weight: bold;
+  color: #333;
+}
+
+.progress-bar {
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 5px;
+}
+
+.contribute-button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.contribute-button:hover:not(:disabled) {
+  background-color: #0b7dda;
+}
+
+.contribute-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.error {
+  color: #f44336;
+  padding: 20px;
+  text-align: center;
+  background-color: #ffebee;
+  border-radius: 5px;
+}
+
+.no-projects {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
