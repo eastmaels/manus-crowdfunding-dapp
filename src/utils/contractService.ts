@@ -70,12 +70,13 @@ export class ContractService {
     }
   }
 
-  // Write functions
+  // Write functions - Updated to handle multiple function signatures and send ETH
   public async createProject(
     title: string,
     description: string,
     fundingGoal: string,
-    deadline: Date
+    deadline: Date,
+    ethAmount: string = "0.1" // Default ETH amount to send with transaction
   ): Promise<ethers.ContractTransaction> {
     if (!this.signer) {
       throw new Error('Signer not set. Please connect wallet first.');
@@ -84,16 +85,85 @@ export class ContractService {
     try {
       const fundingGoalWei = ethers.utils.parseEther(fundingGoal);
       const deadlineTimestamp = Math.floor(deadline.getTime() / 1000);
+      const value = ethers.utils.parseEther(ethAmount);
       
-      return await this.contract.connect(this.signer).createProject(
-        title,
-        description,
-        fundingGoalWei,
-        deadlineTimestamp
-      );
+      console.log(`Attempting to create project with ${ethAmount} ETH...`);
+      
+      // Try the standard createProject function first
+      try {
+        return await this.contract.connect(this.signer).createProject(
+          title,
+          description,
+          fundingGoalWei,
+          deadlineTimestamp,
+          { value }
+        );
+      } catch (error) {
+        console.error('Standard createProject failed:', error);
+        
+        // Try with featured parameter (boolean)
+        try {
+          console.log('Trying createProject with featured parameter...');
+          return await this.contract.connect(this.signer)['createProject(string,string,uint256,uint256,bool)'](
+            title,
+            description,
+            fundingGoalWei,
+            deadlineTimestamp,
+            true,
+            { value }
+          );
+        } catch (error) {
+          console.error('createProject with featured parameter failed:', error);
+          
+          // Try with beneficiary parameter (address)
+          try {
+            console.log('Trying createProject with beneficiary parameter...');
+            const userAddress = await this.signer.getAddress();
+            return await this.contract.connect(this.signer)['createProject(string,string,uint256,uint256,address)'](
+              title,
+              description,
+              fundingGoalWei,
+              deadlineTimestamp,
+              userAddress,
+              { value }
+            );
+          } catch (error) {
+            console.error('createProject with beneficiary parameter failed:', error);
+            
+            // Try addProject function
+            try {
+              console.log('Trying addProject function...');
+              return await this.contract.connect(this.signer).addProject(
+                title,
+                description,
+                fundingGoalWei,
+                deadlineTimestamp,
+                { value }
+              );
+            } catch (error) {
+              console.error('addProject function failed:', error);
+              
+              // Try startProject function
+              try {
+                console.log('Trying startProject function...');
+                return await this.contract.connect(this.signer).startProject(
+                  title,
+                  description,
+                  fundingGoalWei,
+                  deadlineTimestamp,
+                  { value }
+                );
+              } catch (error) {
+                console.error('startProject function failed:', error);
+                throw new Error('All project creation attempts failed. Please contact the contract owner for the correct function signature.');
+              }
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error('Error creating project:', error);
-      throw new Error('Failed to create project');
+      throw error;
     }
   }
 

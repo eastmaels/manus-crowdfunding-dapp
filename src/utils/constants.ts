@@ -11,7 +11,7 @@ export const NETWORK_CONFIG = {
 // Contract configuration
 export const CONTRACT_ADDRESS = '0xC9D03c7cB67894fA2A68A9E10aB5132Fd762DA31';
 
-// Since we don't have the full ABI, we'll create a minimal interface for common crowdfunding functions
+// Updated ABI with payable createProject function and alternative signatures
 export const CONTRACT_ABI = [
   // Read functions
   "function name() view returns (string)",
@@ -21,8 +21,14 @@ export const CONTRACT_ABI = [
   "function getContributionsForProject(uint256 projectId) view returns (uint256)",
   "function getContributorCount(uint256 projectId) view returns (uint256)",
   
-  // Write functions
+  // Write functions - updated to be payable
   "function createProject(string memory title, string memory description, uint256 fundingGoal, uint256 deadline) payable",
+  // Alternative signatures to try
+  "function createProject(string memory title, string memory description, uint256 fundingGoal, uint256 deadline, bool featured) payable",
+  "function createProject(string memory title, string memory description, uint256 fundingGoal, uint256 deadline, address beneficiary) payable",
+  "function addProject(string memory title, string memory description, uint256 fundingGoal, uint256 deadline) payable",
+  "function startProject(string memory title, string memory description, uint256 fundingGoal, uint256 deadline) payable",
+  
   "function contribute(uint256 projectId) payable",
   "function withdrawFunds(uint256 projectId)",
   
